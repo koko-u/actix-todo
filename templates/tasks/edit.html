@@ -1,0 +1,73 @@
+{% extends "layouts/layout.html" %}
+
+{% block title %}Edit{% endblock %}
+
+{% block head %}
+<style></style>
+{% endblock %}
+
+{% block content %}
+<div class="p-2 mt-3 w-75 mx-auto bg-body-secondary rounded-2">
+  <form action="/tasks/{{id}}"
+        method="POST">
+    <div class="mb-3">
+      <label for="summary"
+             class="form-label">
+        Summary
+        <span class="text-warning">*</span>
+      </label>
+      <input type="text"
+             value="{{summary.value}}"
+             class="form-control {{summary.error.is_invalid}}"
+             id="summary"
+             name="summary"
+             placeholder="Summary"
+             aria-describedby="summary-feedback" />
+      <div id="summary-feedback"
+           class="invalid-feedback">
+        {{summary.error.message}}
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="description"
+             class="form-label">Description</label>
+      <textarea class="form-control"
+                id="description"
+                name="description"
+                rows="3">{{description.value}}</textarea>
+    </div>
+    <div class="mb-3">
+      <label for="status_id"
+             class="form-label">
+        Status
+        <span class="text-warning">*</span>
+      </label>
+      <select id="status_id"
+              class="form-select {{status.error.is_invalid}}"
+              name="status_id"
+              aria-label="Task Status"
+              aria-describedby="status-feedback">
+        <option value="-1">Select Task Status</option>
+        {% for st in statuses %}
+        {% if st.id == status.value %}
+        <option value="{{st.id}}"
+                selected>{{st.name}}</option>
+        {% else %}
+        <option value="{{st.id}}">{{st.name}}</option>
+        {% endif %}
+        {% endfor %}
+      </select>
+      <div id="status-feedback"
+           class="invalid-feedback">
+        {{status.error.message}}
+      </div>
+    </div>
+    <div class="d-grid gap-2 d-sm-block">
+      <button type="submit"
+              class="btn btn-primary px-4">Update</button>
+      <a href="javascript: window.history.back()"
+         class="btn btn-outline-info ms-sm-4">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

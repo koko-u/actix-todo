@@ -1,0 +1,40 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task App</title>
+
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <script src="assets/js/bootstrap.bundle.min.js" defer></script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Task Application</h1>
+        <a href="/tasks">Task List</a>
+    </div>
+</body>
+
+</html> -->
+
+{% extends "layouts/layout.html" %}
+
+{% block title %}Index{% endblock %}
+
+{% block head %}
+<style></style>
+{% endblock %}
+
+{% block content %}
+<div class="text-center">
+    <h1 class="fs-2 mt-5">We can help you manage your TASKS</h1>
+    <p class="d-flex align-items-center justify-content-center">
+        <span>Start with the task list.</span>
+        <span class="material-symbols-outlined">
+            task
+        </span>
+    </p>
+</div>
+{% endblock %}

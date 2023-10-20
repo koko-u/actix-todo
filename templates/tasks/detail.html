@@ -1,0 +1,49 @@
+{% extends "layouts/layout.html" %}
+
+{% block title %}Detail{% endblock %}
+
+{% block head %}
+<style></style>
+{% endblock %}
+
+{% block content %}
+<div class="p-3 mt-2 w-75 mx-auto bg-body-secondary rounded-2">
+    <div class="mb-3">
+        <h5 class="text-dark">Summary #{{task.id}}</h5>
+        <div class="text-white p-2 border border-1 rounded-2 bg-dark">{{task.summary}}</div>
+    </div>
+    <div class="mb-3">
+        <h5 class="text-dark">Description</h5>
+        <p class="text-white p-2 border border-1 rounded-2 bg-dark"
+           style="height: 200px;">
+            {% match task.description %} {% when Some with (description) %}
+            {{description}}
+            {% when None %}
+            No Description
+            {% endmatch %}
+        </p>
+    </div>
+    <div class="mb-3">
+        <h5 class="text-dark">Status</h5>
+        <span class="d-block text-info p-2 border border-1 rounded-2 bg-dark">
+            {{task.status_name}}
+        </span>
+    </div>
+    <div class="d-grid gap-2 d-sm-block">
+        <a href="/tasks"
+           class="btn btn-outline-secondary px-4">
+            <span class="material-symbols-outlined">
+                undo
+            </span>
+            <span class="ms-1">Back</span>
+        </a>
+        <a href="/tasks/{{task.id}}/edit"
+           class="btn btn-primary ms-sm-4 px-4">
+            <span class="material-symbols-outlined">
+                edit
+            </span>
+            <span class="ms-1">Edit</span>
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,116 @@
+{% extends "layouts/layout.html" %}
+
+{% block title %}List{% endblock %}
+
+{% block head %}
+<style></style>
+{% endblock %}
+
+{% block script %}
+<script>
+  document.addEventListener('DOMContentLoaded', e => {
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
+    const toastElList = document.querySelectorAll('.toast')
+    const toastList = [...toastElList].map(toastEl => new bootstrap.Toast(toastEl, {}))
+    for (let el of toastList) {
+      el.show();
+    }
+  })
+</script>
+
+{% endblock %}
+
+{% block content %}
+<div class="mt-2">
+  <div class="mb-2">
+    <a href="/tasks/new"
+       class="btn btn-outline-success">
+      <div class="d-flex align-items-center justify-content-between">
+        <span class="material-symbols-outlined">
+          add_circle
+        </span>
+        <span class="ms-1">New Task</span>
+      </div>
+    </a>
+  </div>
+  <table class="table table-dark table-hover align-middle">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Summary</th>
+        <th>Status</th>
+        <th colspan="2"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for task in tasks %}
+      <tr>
+        <td>#{{task.id}}</td>
+        <td>{{task.summary}}</td>
+        <td>{{task.status_name}}</td>
+        <td>
+          <a href="/tasks/{{task.id}}">
+            <span class="material-symbols-outlined"
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="top"
+                  data-bs-title="View Details">
+              slideshow
+            </span>
+          </a>
+        </td>
+        <td>
+          <a href="/tasks/{{task.id}}/edit">
+            <span class="material-symbols-outlined"
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="top"
+                  data-bs-title="Edit Task">
+              edit_square
+            </span>
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if info_flash_messages.len() > 0 %}
+<div class="toast align-items-center text-bg-success border-0"
+     role="alert"
+     aria-live="assertive"
+     aria-atomic="true">
+  <div class="d-flex">
+    <div class="toast-body">
+      {% for message in info_flash_messages %}
+      {{message}}
+      {% endfor %}
+    </div>
+    <button type="button"
+            class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"></button>
+  </div>
+</div>
+{% endif %}
+
+{% if error_flash_messages.len() > 0 %}
+<div class="toast align-items-center text-bg-danger border-0"
+     role="alert"
+     aria-live="assertive"
+     aria-atomic="true">
+  <div class="d-flex">
+    <div class="toast-body">
+      {% for message in error_flash_messages %}
+      {{message}}
+      {% endfor %}
+    </div>
+    <button type="button"
+            class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"></button>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

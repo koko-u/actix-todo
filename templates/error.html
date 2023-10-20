@@ -1,0 +1,27 @@
+{% extends "layouts/layout.html" %}
+
+{% block title %}Error{% endblock %}
+
+{% block head %}
+<style></style>
+{% endblock %}
+
+{% block content %}
+<div class="text-center">
+    <h1 class="fs-1 mt-5">OOOP's Something went Wong ;(</h1>
+    <p>
+        {{error_message}}
+    </p>
+    <div class="m-2">
+        Please try again bit later.
+    </div>
+    <a href="/" class="btn btn-outline-danger">
+        <div class="d-flex justify-content-between align-items-center">
+            <span class="material-symbols-outlined">
+                sentiment_very_dissatisfied
+            </span>
+            <span>Go to Top Page</span>
+        </div>
+    </a>
+</div>
+{% endblock %}
