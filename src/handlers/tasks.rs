@@ -1,5 +1,5 @@
-
-pub mod list;
+pub mod delete_task;
 pub mod detail;
-pub mod new_task;
 pub mod edit_task;
+pub mod list;
+pub mod new_task;

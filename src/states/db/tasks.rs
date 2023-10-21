@@ -79,6 +79,21 @@ impl DbState {
         }
         Ok(task)
     }
+    pub async fn delete_task(&self, id: i64) -> AppResult<Option<TaskModel>> {
+        let task: Option<TaskModel>;
+        {
+            let mut tx = self.0.begin().await.change_context(AppError)?;
+
+            task = sqlx::query_file_as!(TaskModel, "sql/delete_task_by_id.sql", id)
+                .fetch_optional(tx.as_mut())
+                .await
+                .change_context(AppError)?;
+
+            tx.commit().await.change_context(AppError)?;
+        }
+
+        Ok(task)
+    }
 }
 
 trait AsOption: Into<String> {
