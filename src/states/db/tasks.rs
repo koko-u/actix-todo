@@ -20,8 +20,11 @@ impl DbState {
         Ok(tasks)
     }
     pub async fn get_filtered_tasks(&self, filter: &TaskFilter) -> AppResult<Vec<TaskModel>> {
-        let summary_key = filter.summary.into_option();
-        let tasks = sqlx::query_file_as!(TaskModel, "sql/get_filtered_tasks.sql", summary_key)
+        /*         let summary_key = filter
+        .summary
+        .as_ref()
+        .and_then(|summary| summary.into_option()); */
+        let tasks = sqlx::query_file_as!(TaskModel, "sql/get_filtered_tasks.sql", filter.summary)
             .fetch_all(&self.0)
             .await
             .change_context(AppError)?;
@@ -37,8 +40,8 @@ impl DbState {
         Ok(task)
     }
     pub async fn save_task(&self, new_task: &NewTask) -> AppResult<TaskModel> {
-        let summary = new_task.summary.into_option();
-        let description = new_task.description.into_option();
+        let summary = new_task.summary.as_str().empty_as_none();
+        let description = new_task.description.as_str().empty_as_none();
         let status_id = new_task.status_id;
 
         let task: TaskModel;
@@ -66,8 +69,8 @@ impl DbState {
         id: i64,
         update_task: &UpdateTask,
     ) -> AppResult<Option<TaskModel>> {
-        let summary = update_task.summary.into_option();
-        let description = update_task.description.into_option();
+        let summary = (&update_task.summary).empty_as_none();
+        let description = update_task.description.as_str().empty_as_none();
         let status_id = update_task.status_id;
 
         let task: Option<TaskModel>;

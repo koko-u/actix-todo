@@ -8,7 +8,6 @@ pub fn tasks(cfg: &mut web::ServiceConfig) {
             .route("", web::get().to(task_list_handler))
             .route("", web::post().to(create_task_handler))
             .route("/new", web::get().to(new_task_form_handler))
-            .route("/filter", web::get().to(filter_task_list_handler))
             .route("/{id}", web::get().to(task_detail_handler))
             .route("/{id}", web::post().to(update_task_handler))
             .route("/{id}/edit", web::get().to(edit_task_form_handler))

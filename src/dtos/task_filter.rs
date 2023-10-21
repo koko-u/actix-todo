@@ -1,6 +1,6 @@
 use serde::Deserialize;
 
-#[derive(Deserialize, Default, Clone, PartialEq, Eq)]
+#[derive(Debug, Deserialize, Default, Clone, PartialEq, Eq)]
 pub struct TaskFilter {
-    pub summary: String,
+    pub summary: Option<String>,
 }

@@ -11,32 +11,19 @@ use crate::utils::AsOption;
 // GET /tasks
 pub async fn task_list_handler(
     app_data: web::Data<AppState>,
-    flash_messages: IncomingFlashMessages,
-) -> Result<impl Responder, AppResponseError> {
-    let tasks = app_data.db.get_all_tasks().await?;
-
-    use actix_web_flash_messages::Level as FLevel;
-    let task_list = TaskList {
-        tasks: tasks.into_iter().map(From::from).collect(),
-        success_flash_messages: flash_messages.filter(FLevel::Success),
-        error_flash_messages: flash_messages.filter(FLevel::Error),
-        ..Default::default()
-    };
-
-    Ok(task_list)
-}
-
-// GET /tasks/filter?summary=...
-pub async fn filter_task_list_handler(
-    app_data: web::Data<AppState>,
-    flash_messages: IncomingFlashMessages,
     query: web::Query<TaskFilter>,
+    flash_messages: IncomingFlashMessages,
 ) -> Result<impl Responder, AppResponseError> {
-    let task_filter = query.into_inner();
+    let TaskFilter { summary } = query.into_inner();
+    let task_filter = TaskFilter {
+        summary: summary.as_ref().and_then(AsOption::empty_as_none),
+    };
+    log::info!("{task_filter:#?}");
     let tasks = app_data.db.get_filtered_tasks(&task_filter).await?;
+
     use actix_web_flash_messages::Level as FLevel;
     let task_list = TaskList {
-        search_key: task_filter.summary.into_option(),
+        search_key: task_filter.summary,
         tasks: tasks.into_iter().map(From::from).collect(),
         success_flash_messages: flash_messages.filter(FLevel::Success),
         error_flash_messages: flash_messages.filter(FLevel::Error),

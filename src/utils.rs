@@ -1,13 +1,16 @@
-pub trait AsOption: Into<String> {
-    fn into_option(self) -> Option<String>;
+pub trait AsOption: AsRef<str> {
+    fn empty_as_none(self) -> Option<String>;
 }
-impl<'a> AsOption for &'a str {
-    fn into_option(self) -> Option<String> {
-        let s: String = self.into();
+impl<S> AsOption for S
+where
+    S: AsRef<str>,
+{
+    fn empty_as_none(self) -> Option<String> {
+        let s: &str = self.as_ref();
         if s.is_empty() {
             None
         } else {
-            Some(s)
+            Some(s.to_string())
         }
     }
 }

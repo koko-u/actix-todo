@@ -65,7 +65,7 @@
     <div class="p-4 d-flex justify-content-end align-items-center border-1 rounded-1 bg-dark">
       <div class="row">
         <div class="col">
-          <form action="/tasks/filter"
+          <form action="/tasks"
                 meethod="GET">
             <div class="input-group bg-body-tertiary">
               <input type="search"
@@ -89,17 +89,12 @@
     </div>
   </div>
 
-  {% if tasks.is_empty()  %}
-  {% match search_key %}
-  {% when Some with (k) %}
-  <div class="text-center p-5 m-5 border-1 rounded-1 bg-dark-subtle">
-    No search results is found. <br />
-    Please try another keyword.
-    <span class="material-symbols-outlined text-danger-emphasis">
-      sentiment_stressed
-    </span>
-  </div>
-  {% when None %}
+  {% if tasks.is_empty() %}
+
+  {# no task lists #}
+  {% if search_key.is_none() %}
+
+  {# no search key #}
   <div class="text-center p-5 m-5 border-1 rounded-1 bg-dark-subtle">
     There are no tasks. <br />
     Starting adding a your new task.
@@ -107,8 +102,23 @@
       add_reaction
     </span>
   </div>
-  {% endmatch %}
+
   {% else %}
+
+  {# search by something but no results #}
+  <div class="text-center p-5 m-5 border-1 rounded-1 bg-dark-subtle">
+    No search results is found. <br />
+    Please try another keyword.
+    <span class="material-symbols-outlined text-danger-emphasis">
+      sentiment_stressed
+    </span>
+  </div>
+
+  {% endif %}
+
+  {% else %}
+
+  {# the task list table #}
   <table class="table table-dark table-hover align-middle">
     <thead>
       <tr>
@@ -197,6 +207,7 @@
       {% endfor %}
     </tbody>
   </table>
+
   {% endif %}
 
 </div>
