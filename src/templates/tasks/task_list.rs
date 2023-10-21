@@ -6,6 +6,6 @@ use crate::dtos::TaskDto;
 #[template(path = "tasks/list.html")]
 pub struct TaskList {
     pub tasks: Vec<TaskDto>,
-    pub info_flash_messages: Vec<String>,
+    pub success_flash_messages: Vec<String>,
     pub error_flash_messages: Vec<String>,
 }

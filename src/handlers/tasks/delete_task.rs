@@ -14,7 +14,7 @@ pub async fn delete_task_handler(
     let id = path.into_inner();
     match app_data.db.delete_task(id).await? {
         Some(deleted_task) => {
-            FlashMessage::info(format!("Task #{} is successfully deleted", deleted_task.id)).send();
+            FlashMessage::success(format!("Task #{} is successfully deleted", deleted_task.id)).send();
         }
         None => {
             FlashMessage::error("Failed to delete the task").send();

@@ -54,7 +54,7 @@ pub async fn update_task_handler(
             // validation all ok
             match app_data.db.update_task(id, &update_task).await? {
                 Some(updated_task) => {
-                    FlashMessage::info(format!(
+                    FlashMessage::success(format!(
                         "Task #{} is successfully updated",
                         updated_task.id
                     ))

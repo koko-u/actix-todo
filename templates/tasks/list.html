@@ -137,14 +137,14 @@
 </div>
 
 <!-- Success Flash Message [START] -->
-{% if info_flash_messages.len() > 0 %}
+{% if success_flash_messages.len() > 0 %}
 <div class="toast align-items-center text-bg-success border-0"
      role="alert"
      aria-live="assertive"
      aria-atomic="true">
   <div class="d-flex">
     <div class="toast-body">
-      {% for message in info_flash_messages %}
+      {% for message in success_flash_messages %}
       {{message}}
       {% endfor %}
     </div>

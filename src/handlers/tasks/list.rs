@@ -15,7 +15,7 @@ pub async fn task_list_handler(
     use actix_web_flash_messages::Level as FLevel;
     let task_list = TaskList {
         tasks: tasks.into_iter().map(From::from).collect(),
-        info_flash_messages: flash_messages.filter(FLevel::Info),
+        success_flash_messages: flash_messages.filter(FLevel::Success),
         error_flash_messages: flash_messages.filter(FLevel::Error),
     };
 
