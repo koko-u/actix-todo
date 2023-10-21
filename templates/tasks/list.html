@@ -71,7 +71,7 @@
               <input type="search"
                      class="form-control"
                      name="summary"
-                     value="{{search_key}}"
+                     value="{{search_key.clone().unwrap_or_default()}}"
                      id="search-by-summary"
                      placeholder="Search by Summary..."
                      aria-label="Search by Summary"
@@ -89,7 +89,17 @@
     </div>
   </div>
 
-  {% if tasks.is_empty() %}
+  {% if tasks.is_empty()  %}
+  {% match search_key %}
+  {% when Some with (k) %}
+  <div class="text-center p-5 m-5 border-1 rounded-1 bg-dark-subtle">
+    No search results is found. <br />
+    Please try another keyword.
+    <span class="material-symbols-outlined text-danger-emphasis">
+      sentiment_stressed
+    </span>
+  </div>
+  {% when None %}
   <div class="text-center p-5 m-5 border-1 rounded-1 bg-dark-subtle">
     There are no tasks. <br />
     Starting adding a your new task.
@@ -97,6 +107,7 @@
       add_reaction
     </span>
   </div>
+  {% endmatch %}
   {% else %}
   <table class="table table-dark table-hover align-middle">
     <thead>

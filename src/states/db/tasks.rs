@@ -6,6 +6,7 @@ use crate::dtos::UpdateTask;
 use crate::errors::AppError;
 use crate::errors::AppResult;
 use crate::models::TaskModel;
+use crate::utils::AsOption;
 
 use super::DbState;
 
@@ -103,19 +104,5 @@ impl DbState {
         }
 
         Ok(task)
-    }
-}
-
-trait AsOption: Into<String> {
-    fn into_option(self) -> Option<String>;
-}
-impl<'a> AsOption for &'a str {
-    fn into_option(self) -> Option<String> {
-        let s: String = self.into();
-        if s.is_empty() {
-            None
-        } else {
-            Some(s)
-        }
     }
 }
