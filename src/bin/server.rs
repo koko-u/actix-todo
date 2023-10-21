@@ -18,13 +18,9 @@ use todoapp::routes::root;
 use todoapp::routes::tasks;
 use todoapp::states::AppState;
 
-fn is_production() -> bool {
-    env::var("APP_ENV").map_or(false, |app_env| app_env.to_lowercase() == "production")
-}
-
 #[actix_web::main]
 async fn main() -> AppResult<()> {
-    if !is_production() {
+    if cfg!(debug_assertions) {
         // load .env only development enviornment
         dotenv::dotenv().change_context(AppError)?;
     }
