@@ -9,3 +9,5 @@ SELECT
 FROM
   tasks AS T
   INNER JOIN status AS S ON T.status_id = S.id
+ORDER BY
+  T.id
