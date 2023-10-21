@@ -30,7 +30,7 @@ async fn main() -> AppResult<()> {
     }
     env_logger::init_from_env(Env::default().default_filter_or("info"));
 
-    let addrs = net::SocketAddr::from(([127, 0, 0, 1], 8080));
+    let addrs = net::SocketAddr::from(([0, 0, 0, 0], 8088));
     let app_data = web::Data::new(AppState::new()?);
 
     let cookie_key = dotenv::var("COOKIE_KEY").change_context(AppError)?;
