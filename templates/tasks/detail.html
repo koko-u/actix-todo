@@ -29,21 +29,67 @@
             {{task.status_name}}
         </span>
     </div>
-    <div class="d-grid gap-2 d-sm-block">
-        <a href="/tasks"
-           class="btn btn-outline-secondary px-4">
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="d-grid gap-2 d-sm-block">
+            <a href="/tasks"
+               class="btn btn-outline-secondary px-4">
+                <span class="material-symbols-outlined">
+                    undo
+                </span>
+                <span class="ms-1">Back</span>
+            </a>
+            <a href="/tasks/{{task.id}}/edit"
+               class="btn btn-primary ms-sm-4 px-4">
+                <span class="material-symbols-outlined">
+                    edit
+                </span>
+                <span class="ms-1">Edit</span>
+            </a>
+        </div>
+
+        <button class="btn btn-danger"
+                data-bs-toggle="modal"
+                data-bs-target="#delete-task">
             <span class="material-symbols-outlined">
-                undo
+                delete
             </span>
-            <span class="ms-1">Back</span>
-        </a>
-        <a href="/tasks/{{task.id}}/edit"
-           class="btn btn-primary ms-sm-4 px-4">
-            <span class="material-symbols-outlined">
-                edit
-            </span>
-            <span class="ms-1">Edit</span>
-        </a>
+            <span class="ms-1">DELETE</span>
+        </button>
+
+        <!-- Confirm Delete Dialog [START] -->
+        <div class="modal fade"
+             id="delete-task"
+             tabindex="-1"
+             aria-labelledby="delete-task-label"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5"
+                            id="delete-task-label">Confirm to Delete the Task</h1>
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-danger">
+                        Are you sure to delete this task: {{task.summary}}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal">Cancel</button>
+                        <form action="/tasks/{{task.id}}/delete"
+                              method="POST">
+                            <button type="submit"
+                                    class="btn btn-danger">DELETE!</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Confirm Delete Dialog [END] -->
     </div>
+</div>
 </div>
 {% endblock %}
