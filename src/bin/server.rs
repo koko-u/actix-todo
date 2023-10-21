@@ -18,9 +18,17 @@ use todoapp::routes::root;
 use todoapp::routes::tasks;
 use todoapp::states::AppState;
 
+fn is_production() -> bool {
+    env::var("APP_ENV").map_or(false, |app_env| app_env.to_lowercase() == "production")
+}
+
 #[actix_web::main]
 async fn main() -> AppResult<()> {
-    dotenv::dotenv().change_context(AppError)?;
+    if !is_production() {
+        // load .env only development enviornment
+        dotenv::dotenv().change_context(AppError)?;
+    }
+
     if env::var("RUST_LOG").is_err() {
         env::set_var("RUST_LOG", "info");
     }
