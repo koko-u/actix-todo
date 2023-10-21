@@ -35,7 +35,7 @@
 
 {% block content %}
 <div class="mt-2">
-  <div class="mb-2">
+  <div class="mb-2 d-flex justify-content-between align-items-center">
     <a href="/tasks/new"
        class="btn btn-outline-success">
       <div class="d-flex align-items-center justify-content-between">
@@ -45,7 +45,49 @@
         <span class="ms-1">New Task</span>
       </div>
     </a>
+
+    <a class="btn btn-outline-secondary"
+       data-bs-toggle="collapse"
+       href="#search-box"
+       role="button"
+       aria-expanded="false"
+       aria-controls="search-box">
+      <span class="material-symbols-outlined">
+        expand_all
+      </span>
+      <span class="ms-1">Search</span>
+    </a>
   </div>
+
+  <div class="collapse"
+       id="search-box"
+       class="mb-2">
+    <div class="p-4 d-flex justify-content-end align-items-center border-1 rounded-1 bg-dark">
+      <div class="row">
+        <div class="col">
+          <form action="/tasks/filter"
+                meethod="GET">
+            <div class="input-group bg-body-tertiary">
+              <input type="search"
+                     class="form-control"
+                     name="key"
+                     id="search-by-summary"
+                     placeholder="Search by Summary..."
+                     aria-label="Search by Summary"
+                     aria-describedby="search-by-summary-button">
+              <button type="submit"
+                      class="btn btn-outline-secondary"
+                      id="search-by-summary-button">Search
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
   <table class="table table-dark table-hover align-middle">
     <thead>
       <tr>
