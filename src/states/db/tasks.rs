@@ -1,6 +1,7 @@
 use error_stack::ResultExt;
 
 use crate::dtos::NewTask;
+use crate::dtos::TaskFilter;
 use crate::dtos::UpdateTask;
 use crate::errors::AppError;
 use crate::errors::AppResult;
@@ -11,6 +12,15 @@ use super::DbState;
 impl DbState {
     pub async fn get_all_tasks(&self) -> AppResult<Vec<TaskModel>> {
         let tasks = sqlx::query_file_as!(TaskModel, "sql/get_all_tasks.sql")
+            .fetch_all(&self.0)
+            .await
+            .change_context(AppError)?;
+
+        Ok(tasks)
+    }
+    pub async fn get_filtered_tasks(&self, filter: &TaskFilter) -> AppResult<Vec<TaskModel>> {
+        let summary_key = filter.summary.into_option();
+        let tasks = sqlx::query_file_as!(TaskModel, "sql/get_filtered_tasks.sql", summary_key)
             .fetch_all(&self.0)
             .await
             .change_context(AppError)?;
