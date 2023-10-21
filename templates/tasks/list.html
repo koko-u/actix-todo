@@ -89,6 +89,15 @@
     </div>
   </div>
 
+  {% if tasks.is_empty() %}
+  <div class="text-center p-5 m-5 border-1 rounded-1 bg-dark-subtle">
+    There are no tasks. <br />
+    Starting adding a your new task.
+    <span class="material-symbols-outlined text-info-emphasis">
+      add_reaction
+    </span>
+  </div>
+  {% else %}
   <table class="table table-dark table-hover align-middle">
     <thead>
       <tr>
@@ -177,6 +186,8 @@
       {% endfor %}
     </tbody>
   </table>
+  {% endif %}
+
 </div>
 
 <!-- Success Flash Message [START] -->
