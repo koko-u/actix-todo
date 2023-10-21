@@ -18,9 +18,11 @@
 {% block script %}
 <script>
   document.addEventListener('DOMContentLoaded', e => {
+    // trigger tooltip
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
+    // trigger toast message
     const toastElList = document.querySelectorAll('.toast')
     const toastList = [...toastElList].map(toastEl => new bootstrap.Toast(toastEl, {}))
     for (let el of toastList) {
@@ -83,7 +85,8 @@
           </a>
         </td>
         <td class="each-command-width">
-          <a href="/tasks/{{task.id}}/delete">
+          <a href="#delete-task-{{task.id}}"
+             data-bs-toggle="modal">
             <span class="material-symbols-outlined text-danger"
                   data-bs-toggle="tooltip"
                   data-bs-placement="top"
@@ -93,12 +96,47 @@
             </span>
           </a>
         </td>
+
+        <!-- Confirm Delete Dialog -->
+        <div class="modal fade"
+             id="delete-task-{{task.id}}"
+             tabindex="-1"
+             aria-labelledby="delete-task-label-{{task.id}}"
+             aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5"
+                    id="delete-task-label-{{task.id}}">Confirm to Delete the Task</h1>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+              </div>
+              <div class="modal-body text-danger">
+                Are you sure to delete the task "{{task.summary}}"
+              </div>
+              <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">Cancel</button>
+                <form action="/tasks/{{task.id}}/delete"
+                      method="POST">
+                  <button type="submit"
+                          class="btn btn-danger">DELETE!</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </tr>
       {% endfor %}
     </tbody>
   </table>
 </div>
 
+<!-- Success Flash Message [START] -->
 {% if info_flash_messages.len() > 0 %}
 <div class="toast align-items-center text-bg-success border-0"
      role="alert"
@@ -117,7 +155,9 @@
   </div>
 </div>
 {% endif %}
+<!-- Success Flash Message [END] -->
 
+<!-- Error Flash Message [START] -->
 {% if error_flash_messages.len() > 0 %}
 <div class="toast align-items-center text-bg-danger border-0"
      role="alert"
@@ -136,4 +176,6 @@
   </div>
 </div>
 {% endif %}
+<!-- Error Flash Message [END] -->
+
 {% endblock %}
