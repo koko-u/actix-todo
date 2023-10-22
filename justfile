@@ -9,3 +9,6 @@ watch:
 
 build:
     cargo watch --quiet --clear --exec build
+
+test:
+    cargo watch --quiet --clear --exec "nextest run"

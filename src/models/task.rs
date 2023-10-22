@@ -2,7 +2,7 @@ use chrono::NaiveDateTime;
 use serde::Deserialize;
 use serde::Serialize;
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Default, Serialize, Deserialize)]
 pub struct TaskModel {
     pub id: i64,
     pub summary: String,

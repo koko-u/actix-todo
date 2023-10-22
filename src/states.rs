@@ -7,6 +7,8 @@ mod db;
 mod repositories;
 
 pub use repositories::DbRepository;
+pub use repositories::StatusRepository;
+pub use repositories::TasksRepository;
 
 pub struct AppState<Repo> {
     pub repo: Repo,

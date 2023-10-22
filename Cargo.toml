@@ -8,14 +8,24 @@ default-run = "server"
 
 [dependencies]
 actix-files = "0.6.2"
-actix-web = { version = "4.4.0", features = ["cookies","secure-cookies"]}
-actix-web-flash-messages = { version = "0.4.2", features = ["cookies"] }
+actix-web = { version = "4.4.0", features = [
+    "cookies",
+    "secure-cookies",
+] }
+actix-web-flash-messages = { version = "0.4.2", features = [
+    "cookies",
+] }
 askama = { version = "0.12.1", features = [
     "with-actix-web",
     "serde",
     "serde_json",
 ] }
-askama_actix = { version = "0.14.0", features = ["config", "humansize", "serde-json", "urlencode"] }
+askama_actix = { version = "0.14.0", features = [
+    "config",
+    "humansize",
+    "serde-json",
+    "urlencode",
+] }
 async-trait = "0.1.74"
 chrono = { version = "0.4.31", features = [
     "serde",
@@ -45,10 +55,15 @@ sqlx = { version = "0.7.2", features = [
     "runtime-tokio",
 ] }
 typed-builder = "0.16.2"
-url = { version = "2.4.1", features = ["serde"] }
+url = { version = "2.4.1", features = [
+    "serde",
+] }
 uuid = { version = "1.4.1", features = [
     "serde",
     "v4",
     "fast-rng",
 ] }
 validify = "1.0.12"
+
+[dev-dependencies]
+assertables = "7.0.1"
