@@ -59,40 +59,72 @@
     </a>
   </div>
 
+  <!-- Search form [START] -->
   <div class="collapse"
        id="search-box"
        class="mb-2">
     <div class="p-4 d-flex justify-content-end align-items-center border-1 rounded-1 bg-dark">
-      <div class="row">
-        <div class="col">
-          <form action="/tasks"
-                meethod="GET">
-            <div class="input-group bg-body-tertiary">
-              <input type="search"
-                     class="form-control"
-                     name="summary"
-                     value="{{search_key.clone().unwrap_or_default()}}"
-                     id="search-by-summary"
-                     placeholder="Search by Summary..."
-                     aria-label="Search by Summary"
-                     aria-describedby="search-by-summary-button">
-              <button type="submit"
-                      class="btn btn-outline-secondary"
-                      id="search-by-summary-button">Search
-              </button>
-            </div>
+      <form class="row row-cols-lg-auto g-3 align-items-center"
+            action="/tasks"
+            method="GET">
 
-          </form>
+        <div class="col">
+          <input type="search"
+                 class="form-control"
+                 name="summary"
+                 value="{{task_filter.summary.clone().unwrap_or_default()}}"
+                 id="search-by-summary"
+                 placeholder="Search by Summary..."
+                 aria-label="Search by Summary"
+                 aria-describedby="search-by-summary-button">
         </div>
-      </div>
+
+        <div class="col">
+          <select id="status_id"
+                  class="form-select"
+                  name="status_id"
+                  aria-label="Task Status"
+                  aria-describedby="status-feedback">
+            <option value="-1">Status Filter</option>
+            {#
+            {% for st in statuses %}
+            {% match task_filter.status_id %}
+            {% when Some with (id) %}
+            {% if id == st.id %}
+            <option value="{{st.id}}"
+                    selected>{{st.name}}</option>
+            {% else %}
+            <option value="{{st.id}}">{{st.name}}</option>
+            {% endif %}
+            {% when None %}
+            <option value="{{st.id}}">{{st.name}}</option>
+            {% endmatch %}
+
+            {% endfor %}
+            #}
+            {% for st in statuses %}
+            <option value="{{st.id}}">{{st.name}}</option>
+            {% endfor %}
+          </select>
+
+        </div>
+
+        <div class="col">
+          <button type="submit"
+                  class="btn btn-outline-secondary"
+                  id="search-by-summary-button">Search
+          </button>
+        </div>
+      </form>
 
     </div>
   </div>
+  <!-- Search form [END] -->
 
   {% if tasks.is_empty() %}
 
   {# no task lists #}
-  {% if search_key.is_none() %}
+  {% if task_filter.is_empty() %}
 
   {# no search key #}
   <div class="text-center p-5 m-5 border-1 rounded-1 bg-dark-subtle">

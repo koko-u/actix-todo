@@ -6,7 +6,6 @@ use crate::dtos::TaskFilter;
 use crate::errors::AppResponseError;
 use crate::states::AppState;
 use crate::templates::TaskList;
-use crate::utils::AsOption;
 
 // GET /tasks
 pub async fn task_list_handler(
@@ -14,17 +13,17 @@ pub async fn task_list_handler(
     query: web::Query<TaskFilter>,
     flash_messages: IncomingFlashMessages,
 ) -> Result<impl Responder, AppResponseError> {
-    let TaskFilter { summary } = query.into_inner();
-    let task_filter = TaskFilter {
-        summary: summary.as_ref().and_then(AsOption::empty_as_none),
-    };
-    log::info!("{task_filter:#?}");
+    let task_filter = query.into_inner();
+    let task_filter = task_filter.normalize();
+
     let tasks = app_data.db.get_filtered_tasks(&task_filter).await?;
+    let statuses = app_data.db.get_all_statuses().await?;
 
     use actix_web_flash_messages::Level as FLevel;
     let task_list = TaskList {
-        search_key: task_filter.summary,
+        task_filter,
         tasks: tasks.into_iter().map(From::from).collect(),
+        statuses,
         success_flash_messages: flash_messages.filter(FLevel::Success),
         error_flash_messages: flash_messages.filter(FLevel::Error),
     };

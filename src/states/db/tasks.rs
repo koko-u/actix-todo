@@ -24,10 +24,15 @@ impl DbState {
         .summary
         .as_ref()
         .and_then(|summary| summary.into_option()); */
-        let tasks = sqlx::query_file_as!(TaskModel, "sql/get_filtered_tasks.sql", filter.summary)
-            .fetch_all(&self.0)
-            .await
-            .change_context(AppError)?;
+        let tasks = sqlx::query_file_as!(
+            TaskModel,
+            "sql/get_filtered_tasks.sql",
+            filter.summary,
+            filter.status_id
+        )
+        .fetch_all(&self.0)
+        .await
+        .change_context(AppError)?;
 
         Ok(tasks)
     }
