@@ -9,17 +9,19 @@ use crate::dtos::IsValidStatus;
 use crate::dtos::UpdateTask;
 use crate::errors::AppResponseError;
 use crate::states::AppState;
-use crate::states::StatusRepository;
-use crate::states::TasksRepository;
+use crate::states::DbRepository;
 use crate::templates::EditTaskTemplate;
 
-pub async fn edit_task_form_handler(
-    app_data: web::Data<AppState>,
+pub async fn edit_task_form_handler<Repo>(
+    app_data: web::Data<AppState<Repo>>,
     path: web::Path<i64>,
-) -> Result<impl Responder, AppResponseError> {
+) -> Result<impl Responder, AppResponseError>
+where
+    Repo: DbRepository,
+{
     let id = path.into_inner();
-    let statuses = app_data.db.get_all_statuses().await?;
-    let Some(task) = app_data.db.get_task_by_id(id).await? else {
+    let statuses = app_data.repo.get_all_statuses().await?;
+    let Some(task) = app_data.repo.get_task_by_id(id).await? else {
         let redirect = HttpResponse::SeeOther()
             .append_header((http::header::LOCATION, "/tasks"))
             .body(format!("Task with id: {id} not found"));
@@ -37,16 +39,19 @@ pub async fn edit_task_form_handler(
     Ok(show_form.to_response().map_into_right_body())
 }
 
-pub async fn update_task_handler(
-    app_data: web::Data<AppState>,
+pub async fn update_task_handler<Repo>(
+    app_data: web::Data<AppState<Repo>>,
     form: web::Form<UpdateTask>,
     path: web::Path<i64>,
-) -> Result<impl Responder, AppResponseError> {
+) -> Result<impl Responder, AppResponseError>
+where
+    Repo: DbRepository,
+{
     use validify::Validify;
     let mut update_task = form.into_inner();
     let id = path.into_inner();
 
-    let statuses = app_data.db.get_all_statuses().await?;
+    let statuses = app_data.repo.get_all_statuses().await?;
 
     match (
         update_task.validify_self(),
@@ -54,7 +59,7 @@ pub async fn update_task_handler(
     ) {
         (Ok(()), status_id_errors) if status_id_errors.is_empty() => {
             // validation all ok
-            match app_data.db.update_task(id, &update_task).await? {
+            match app_data.repo.update_task(id, &update_task).await? {
                 Some(updated_task) => {
                     FlashMessage::success(format!(
                         "Task #{} is successfully updated",

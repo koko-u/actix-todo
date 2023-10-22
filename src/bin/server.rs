@@ -16,7 +16,7 @@ use todoapp::middlewares;
 use todoapp::routes::not_found_service;
 use todoapp::routes::root;
 use todoapp::routes::tasks;
-use todoapp::states::AppState;
+use todoapp::states::create_app_state;
 
 #[actix_web::main]
 async fn main() -> AppResult<()> {
@@ -31,7 +31,8 @@ async fn main() -> AppResult<()> {
     env_logger::init_from_env(Env::default().default_filter_or("info"));
 
     let addrs = net::SocketAddr::from(([0, 0, 0, 0], 8088));
-    let app_data = web::Data::new(AppState::new()?);
+    let app_state = create_app_state()?;
+    let app_data = web::Data::new(app_state);
 
     let cookie_key = dotenv::var("COOKIE_KEY").change_context(AppError)?;
     let cookie_key = Key::from(cookie_key.as_bytes());
@@ -44,7 +45,7 @@ async fn main() -> AppResult<()> {
             .wrap(middlewares::build_flash(cookie_key.clone()))
             .service(assets_service())
             .configure(root)
-            .configure(tasks)
+            .configure(tasks(create_app_state))
             .default_service(not_found_service())
     })
     .bind(addrs)

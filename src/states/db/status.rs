@@ -4,7 +4,8 @@ use error_stack::ResultExt;
 use crate::errors::AppError;
 use crate::errors::AppResult;
 use crate::models::StatusModel;
-use crate::states::StatusRepository;
+use crate::states::repositories::StatusRepository;
+
 
 use super::DbState;
 

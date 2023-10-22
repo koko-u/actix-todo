@@ -5,20 +5,22 @@ use actix_web_flash_messages::IncomingFlashMessages;
 use crate::dtos::TaskFilter;
 use crate::errors::AppResponseError;
 use crate::states::AppState;
-use crate::states::StatusRepository;
-use crate::states::TasksRepository;
+use crate::states::DbRepository;
 use crate::templates::TaskList;
 
 // GET /tasks
-pub async fn task_list_handler(
-    app_data: web::Data<AppState>,
+pub async fn task_list_handler<Repo>(
+    app_data: web::Data<AppState<Repo>>,
     query: web::Query<TaskFilter>,
     flash_messages: IncomingFlashMessages,
-) -> Result<impl Responder, AppResponseError> {
+) -> Result<impl Responder, AppResponseError>
+where
+    Repo: DbRepository,
+{
     let task_filter = query.into_inner();
 
-    let tasks = app_data.db.get_filtered_tasks(&task_filter).await?;
-    let statuses = app_data.db.get_all_statuses().await?;
+    let tasks = app_data.repo.get_filtered_tasks(&task_filter).await?;
+    let statuses = app_data.repo.get_all_statuses().await?;
 
     use actix_web_flash_messages::Level as FLevel;
     let task_list = TaskList {

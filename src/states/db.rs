@@ -11,6 +11,8 @@ use url::Url;
 use crate::errors::AppError;
 use crate::errors::AppResult;
 
+use super::DbRepository;
+
 mod status;
 mod tasks;
 
@@ -43,3 +45,5 @@ impl DbState {
         Ok(Self(pool))
     }
 }
+
+impl DbRepository for DbState {}

@@ -6,14 +6,17 @@ use actix_web_flash_messages::FlashMessage;
 
 use crate::errors::AppResponseError;
 use crate::states::AppState;
-use crate::states::TasksRepository;
+use crate::states::DbRepository;
 
-pub async fn delete_task_handler(
-    app_data: web::Data<AppState>,
+pub async fn delete_task_handler<Repo>(
+    app_data: web::Data<AppState<Repo>>,
     path: web::Path<i64>,
-) -> Result<impl Responder, AppResponseError> {
+) -> Result<impl Responder, AppResponseError>
+where
+    Repo: DbRepository,
+{
     let id = path.into_inner();
-    match app_data.db.delete_task(id).await? {
+    match app_data.repo.delete_task(id).await? {
         Some(deleted_task) => {
             FlashMessage::success(format!("Task #{} is successfully deleted", deleted_task.id))
                 .send();

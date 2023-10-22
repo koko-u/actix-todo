@@ -7,7 +7,7 @@ use crate::dtos::UpdateTask;
 use crate::errors::AppError;
 use crate::errors::AppResult;
 use crate::models::TaskModel;
-use crate::states::TasksRepository;
+use crate::states::repositories::TasksRepository;
 use crate::utils::AsOption;
 
 use super::DbState;

@@ -7,6 +7,8 @@ use crate::errors::AppResult;
 use crate::models::StatusModel;
 use crate::models::TaskModel;
 
+pub trait DbRepository: TasksRepository + StatusRepository {}
+
 #[async_trait]
 pub trait TasksRepository {
     /// get task using filter conditions

@@ -9,33 +9,38 @@ use crate::dtos::IsValidStatus;
 use crate::dtos::NewTask;
 use crate::errors::AppResponseError;
 use crate::states::AppState;
-use crate::states::StatusRepository;
-use crate::states::TasksRepository;
+use crate::states::DbRepository;
 use crate::templates::NewTaskTemplate;
 
-pub async fn new_task_form_handler(
-    app_data: web::Data<AppState>,
-) -> Result<impl Responder, AppResponseError> {
-    let statuses = app_data.db.get_all_statuses().await?;
+pub async fn new_task_form_handler<Repo>(
+    app_data: web::Data<AppState<Repo>>,
+) -> Result<impl Responder, AppResponseError>
+where
+    Repo: DbRepository,
+{
+    let statuses = app_data.repo.get_all_statuses().await?;
     Ok(NewTaskTemplate {
         statuses,
         ..Default::default()
     })
 }
 
-pub async fn create_task_handler(
-    app_data: web::Data<AppState>,
+pub async fn create_task_handler<Repo>(
+    app_data: web::Data<AppState<Repo>>,
     form: web::Form<NewTask>,
-) -> Result<impl Responder, AppResponseError> {
+) -> Result<impl Responder, AppResponseError>
+where
+    Repo: DbRepository,
+{
     use validify::Validify;
     let mut new_task = form.into_inner();
-    let statuses = app_data.db.get_all_statuses().await?;
+    let statuses = app_data.repo.get_all_statuses().await?;
     match (
         new_task.validify_self(),
         new_task.is_valid_status(&statuses),
     ) {
         (Ok(()), status_id_errors) if status_id_errors.is_empty() => {
-            let new_task = app_data.db.create_task(&new_task).await?;
+            let new_task = app_data.repo.create_task(&new_task).await?;
             FlashMessage::success(format!("New task #{} has been created.", new_task.id)).send();
             let res = HttpResponse::SeeOther()
                 .append_header((http::header::LOCATION, "/tasks"))

@@ -6,15 +6,18 @@ use actix_web::Responder;
 
 use crate::errors::AppResponseError;
 use crate::states::AppState;
-use crate::states::TasksRepository;
+use crate::states::DbRepository;
 use crate::templates::TaskDetail;
 
-pub async fn task_detail_handler(
-    app_data: web::Data<AppState>,
+pub async fn task_detail_handler<Repo>(
+    app_data: web::Data<AppState<Repo>>,
     path: web::Path<i64>,
-) -> Result<impl Responder, AppResponseError> {
+) -> Result<impl Responder, AppResponseError>
+where
+    Repo: DbRepository,
+{
     let id = path.into_inner();
-    let task = app_data.db.get_task_by_id(id).await?;
+    let task = app_data.repo.get_task_by_id(id).await?;
     let response = match task {
         Some(task) => Either::Right(TaskDetail { task: task.into() }),
         None => Either::Left(
