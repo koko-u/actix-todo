@@ -6,6 +6,7 @@ use actix_web::Responder;
 
 use crate::errors::AppResponseError;
 use crate::states::AppState;
+use crate::states::TasksRepository;
 use crate::templates::TaskDetail;
 
 pub async fn task_detail_handler(

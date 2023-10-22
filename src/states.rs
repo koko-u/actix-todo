@@ -4,6 +4,10 @@ use crate::errors::AppError;
 use crate::errors::AppResult;
 
 mod db;
+mod repositories;
+
+pub use repositories::StatusRepository;
+pub use repositories::TasksRepository;
 
 pub struct AppState {
     pub db: db::DbState,

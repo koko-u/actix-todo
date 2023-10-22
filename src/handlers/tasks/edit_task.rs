@@ -9,6 +9,8 @@ use crate::dtos::IsValidStatus;
 use crate::dtos::UpdateTask;
 use crate::errors::AppResponseError;
 use crate::states::AppState;
+use crate::states::StatusRepository;
+use crate::states::TasksRepository;
 use crate::templates::EditTaskTemplate;
 
 pub async fn edit_task_form_handler(

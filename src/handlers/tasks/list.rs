@@ -5,6 +5,8 @@ use actix_web_flash_messages::IncomingFlashMessages;
 use crate::dtos::TaskFilter;
 use crate::errors::AppResponseError;
 use crate::states::AppState;
+use crate::states::StatusRepository;
+use crate::states::TasksRepository;
 use crate::templates::TaskList;
 
 // GET /tasks

@@ -9,6 +9,8 @@ use crate::dtos::IsValidStatus;
 use crate::dtos::NewTask;
 use crate::errors::AppResponseError;
 use crate::states::AppState;
+use crate::states::StatusRepository;
+use crate::states::TasksRepository;
 use crate::templates::NewTaskTemplate;
 
 pub async fn new_task_form_handler(
@@ -33,7 +35,7 @@ pub async fn create_task_handler(
         new_task.is_valid_status(&statuses),
     ) {
         (Ok(()), status_id_errors) if status_id_errors.is_empty() => {
-            let new_task = app_data.db.save_task(&new_task).await?;
+            let new_task = app_data.db.create_task(&new_task).await?;
             FlashMessage::success(format!("New task #{} has been created.", new_task.id)).send();
             let res = HttpResponse::SeeOther()
                 .append_header((http::header::LOCATION, "/tasks"))
