@@ -14,7 +14,6 @@ pub async fn task_list_handler(
     flash_messages: IncomingFlashMessages,
 ) -> Result<impl Responder, AppResponseError> {
     let task_filter = query.into_inner();
-    let task_filter = task_filter.normalize();
 
     let tasks = app_data.db.get_filtered_tasks(&task_filter).await?;
     let statuses = app_data.db.get_all_statuses().await?;

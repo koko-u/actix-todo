@@ -11,14 +11,6 @@ use crate::utils::AsOption;
 use super::DbState;
 
 impl DbState {
-    pub async fn get_all_tasks(&self) -> AppResult<Vec<TaskModel>> {
-        let tasks = sqlx::query_file_as!(TaskModel, "sql/get_all_tasks.sql")
-            .fetch_all(&self.0)
-            .await
-            .change_context(AppError)?;
-
-        Ok(tasks)
-    }
     pub async fn get_filtered_tasks(&self, filter: &TaskFilter) -> AppResult<Vec<TaskModel>> {
         /*         let summary_key = filter
         .summary
@@ -28,7 +20,8 @@ impl DbState {
             TaskModel,
             "sql/get_filtered_tasks.sql",
             filter.summary,
-            filter.status_id
+            &filter.status_ids,
+            filter.status_ids.is_empty()
         )
         .fetch_all(&self.0)
         .await

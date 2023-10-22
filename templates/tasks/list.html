@@ -64,11 +64,12 @@
        id="search-box"
        class="mb-2">
     <div class="p-4 d-flex justify-content-end align-items-center border-1 rounded-1 bg-dark">
-      <form class="row row-cols-lg-auto g-3 align-items-center"
+      <form class="row row-cols-lg-auto g-3 align-items-end"
             action="/tasks"
             method="GET">
 
         <div class="col">
+          <label for="search-by-summary">Summary</label>
           <input type="search"
                  class="form-control"
                  name="summary"
@@ -80,23 +81,24 @@
         </div>
 
         <div class="col">
-          <select id="status_id"
-                  class="form-select"
-                  name="status_id"
-                  aria-label="Task Status"
-                  aria-describedby="status-feedback">
-            <option value="-1">Status Filter</option>
+          <label for="#">Status</label>
+          <div class="d-flex justify-content-around align-items-md-center">
             {% for st in statuses %}
-            {% if task_filter.status_id.unwrap_or_default() == st.id %}
-            <option value="{{st.id}}"
-                    selected>{{st.name}}</option>
-            {% else %}
-            <option value="{{st.id}}">{{st.name}}</option>
-            {% endif %}
-
+            <div class="mx-1">
+              <input type="checkbox"
+                     class="btn-check"
+                     id="status_id-{{st.id}}"
+                     name="status_id"
+                     value="{{st.id}}"
+                     {% if task_filter.status_ids.contains(st.id) %}
+                     checked
+                     {% endif %}
+                     autocomplete="off">
+              <label class="btn btn-sm btn-outline-secondary"
+                     for="status_id-{{st.id}}">{{st.name}}</label>
+            </div>
             {% endfor %}
-          </select>
-
+          </div>
         </div>
 
         <div class="col">
