@@ -86,24 +86,14 @@
                   aria-label="Task Status"
                   aria-describedby="status-feedback">
             <option value="-1">Status Filter</option>
-            {#
             {% for st in statuses %}
-            {% match task_filter.status_id %}
-            {% when Some with (id) %}
-            {% if id == st.id %}
+            {% if task_filter.status_id.unwrap_or_default() == st.id %}
             <option value="{{st.id}}"
                     selected>{{st.name}}</option>
             {% else %}
             <option value="{{st.id}}">{{st.name}}</option>
             {% endif %}
-            {% when None %}
-            <option value="{{st.id}}">{{st.name}}</option>
-            {% endmatch %}
 
-            {% endfor %}
-            #}
-            {% for st in statuses %}
-            <option value="{{st.id}}">{{st.name}}</option>
             {% endfor %}
           </select>
 
