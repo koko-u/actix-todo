@@ -15,7 +15,9 @@ where
             web::scope("/auth")
                 .route("/login", web::get().to(login_form_handler::<Repo>))
                 .route("/login", web::post().to(login_handler::<Repo>))
-                .route("/logout", web::post().to(logout_handler::<Repo>)),
+                .route("/logout", web::post().to(logout_handler::<Repo>))
+                .route("/signup", web::get().to(signup_form_handler::<Repo>))
+                .route("/signup", web::post().to(signup_handler::<Repo>)),
         );
     }
 }

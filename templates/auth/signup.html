@@ -1,0 +1,92 @@
+{% extends "layouts/layout.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block head %}
+<style></style>
+{% endblock %}
+
+{% block content %}
+<div class="p-2 mt-3 w-75 mx-auto bg-body-secondary rounded-2">
+    <form action="/auth/signup"
+          method="POST">
+
+        <div class="mb-3">
+            <label for="name"
+                   class="form-label">
+                User Name
+                <span class="text-warning">*</span>
+            </label>
+            <input type="text"
+                   value="{{name.value}}"
+                   class="form-control {{name.error.is_invalid}}"
+                   id="name"
+                   name="name"
+                   placeholder="Username"
+                   aria-describedby="name-feedback" />
+            <div id="name-feedback"
+                 class="invalid-feedback">
+                {{name.error.message}}
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="email"
+                   class="form-label">
+                Email Address
+                <span class="text-warning">*</span>
+            </label>
+            <input type="text"
+                   value="{{email.value}}"
+                   class="form-control {{email.error.is_invalid}}"
+                   id="email"
+                   name="email"
+                   placeholder="Email Address"
+                   aria-describedby="email-feedback" />
+            <div id="email-feedback"
+                 class="invalid-feedback">
+                {{email.error.message}}
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="password"
+                   class="form-label">
+                Password
+                <span class="text-warning">*</span>
+            </label>
+            <input type="password"
+                   class="form-control {{password.error.is_invalid}}"
+                   id="password"
+                   name="password"
+                   aria-describedby="password-feedback" />
+            <div id="password-feedback"
+                 class="invalid-feedback">
+                {{password.error.message}}
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="password-confirm"
+                   class="form-label">
+                Password Confirm
+                <span class="text-warning">*</span>
+            </label>
+            <input type="password"
+                   class="form-control {{password.error.is_invalid}}"
+                   id="password-confirm"
+                   name="password_confirm"
+                   aria-describedby="password-confirm-feedback" />
+            <div id="password-confirm-feedback"
+                 class="invalid-feedback">
+                {{password.error.message}}
+            </div>
+        </div>
+
+        <div class="d-grid gap-2 d-sm-block">
+            <button type="submit"
+                    class="btn btn-primary px-4">SignUp</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

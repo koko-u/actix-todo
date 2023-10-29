@@ -6,6 +6,7 @@ mod server_error;
 mod tasks;
 
 pub use auth::login::LoginTemplate;
+pub use auth::signup::SignUpTemplate;
 pub use fields::ExtractFieldError;
 pub use fields::Field;
 pub use fields::FieldError;

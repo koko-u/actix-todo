@@ -33,7 +33,7 @@ pub trait ExtractFieldError {
 }
 impl ExtractFieldError for validify::ValidationErrors {
     fn extract(&self, name: &'static str) -> FieldError {
-        self.field_errors()
+        self.errors()
             .iter()
             .find(|e| e.field_name().is_some_and(|fname| fname == name))
             .map(|validation_error| FieldError {
@@ -43,4 +43,3 @@ impl ExtractFieldError for validify::ValidationErrors {
             .unwrap_or_default()
     }
 }
-
