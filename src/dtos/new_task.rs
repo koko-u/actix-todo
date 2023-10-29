@@ -5,6 +5,7 @@ use crate::templates::ExtractFieldError;
 use crate::templates::Field;
 use crate::templates::NewTaskTemplate;
 
+use super::into_template::IntoTemplate;
 use super::IsValidStatus;
 
 #[derive(Debug, Clone, PartialEq, Eq, Default, Serialize, Deserialize, validify::Validify)]
@@ -19,8 +20,9 @@ pub struct NewTask {
     pub status_id: i64,
 }
 
-impl NewTask {
-    pub fn into_template(self, validation_errors: validify::ValidationErrors) -> NewTaskTemplate {
+impl IntoTemplate for NewTask {
+    type Template = NewTaskTemplate;
+    fn into_template(self, validation_errors: validify::ValidationErrors) -> NewTaskTemplate {
         NewTaskTemplate {
             summary: Field {
                 value: self.summary,

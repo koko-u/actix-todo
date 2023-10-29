@@ -27,6 +27,7 @@ impl actix_web::ResponseError for AppResponseError {
     fn error_response(&self) -> HttpResponse<body::BoxBody> {
         let server_error = ServerErrorTemplate {
             error_message: format!("{self}"),
+            ..Default::default()
         };
         server_error.to_response()
     }

@@ -1,9 +1,11 @@
+use actix_identity::Identity;
 use actix_web::web;
 use actix_web::Responder;
 use actix_web_flash_messages::IncomingFlashMessages;
 
 use crate::dtos::TaskFilter;
 use crate::errors::AppResponseError;
+use crate::models::UserModel;
 use crate::states::AppState;
 use crate::states::DbRepository;
 use crate::templates::TaskList;
@@ -13,10 +15,12 @@ pub async fn task_list_handler<Repo>(
     app_data: web::Data<AppState<Repo>>,
     query: web::Query<TaskFilter>,
     flash_messages: IncomingFlashMessages,
+    identity: Option<Identity>,
 ) -> Result<impl Responder, AppResponseError>
 where
     Repo: DbRepository,
 {
+    let user = UserModel::try_from_identity(identity, &app_data.repo).await?;
     let task_filter = query.into_inner();
 
     let tasks = app_data.repo.get_filtered_tasks(&task_filter).await?;
@@ -25,6 +29,7 @@ where
     use actix_web_flash_messages::Level as FLevel;
     let task_list = TaskList {
         task_filter,
+        login_user: user,
         tasks: tasks.into_iter().map(From::from).collect(),
         statuses,
         success_flash_messages: flash_messages.filter(FLevel::Success),

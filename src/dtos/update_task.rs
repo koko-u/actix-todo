@@ -5,6 +5,7 @@ use crate::templates::EditTaskTemplate;
 use crate::templates::ExtractFieldError;
 use crate::templates::Field;
 
+use super::into_template::IntoTemplate;
 use super::IsValidStatus;
 
 #[derive(Debug, Clone, PartialEq, Eq, Default, Serialize, Deserialize, validify::Validify)]
@@ -21,8 +22,10 @@ pub struct UpdateTask {
     pub status_id: i64,
 }
 
-impl UpdateTask {
-    pub fn into_template(self, validation_errors: validify::ValidationErrors) -> EditTaskTemplate {
+impl IntoTemplate for UpdateTask {
+    type Template = EditTaskTemplate;
+
+    fn into_template(self, validation_errors: validify::ValidationErrors) -> EditTaskTemplate {
         EditTaskTemplate {
             summary: Field {
                 value: self.summary,

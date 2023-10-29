@@ -1,9 +1,11 @@
+mod auth;
 mod fields;
 mod not_found;
 mod root;
 mod server_error;
 mod tasks;
 
+pub use auth::login::LoginTemplate;
 pub use fields::ExtractFieldError;
 pub use fields::Field;
 pub use fields::FieldError;

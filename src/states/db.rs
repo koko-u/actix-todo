@@ -15,6 +15,7 @@ use super::DbRepository;
 
 mod status;
 mod tasks;
+mod users;
 
 #[derive(Debug)]
 pub struct DbState(PgPool);

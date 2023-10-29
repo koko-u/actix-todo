@@ -15,10 +15,6 @@ use super::DbState;
 #[async_trait]
 impl TasksRepository for DbState {
     async fn get_filtered_tasks(&self, filter: &TaskFilter) -> AppResult<Vec<TaskModel>> {
-        /*         let summary_key = filter
-        .summary
-        .as_ref()
-        .and_then(|summary| summary.into_option()); */
         let tasks = sqlx::query_file_as!(
             TaskModel,
             "sql/get_filtered_tasks.sql",

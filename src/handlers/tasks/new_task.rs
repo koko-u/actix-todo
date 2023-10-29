@@ -1,3 +1,4 @@
+use actix_identity::Identity;
 use actix_web::http;
 use actix_web::web;
 use actix_web::HttpResponse;
@@ -5,22 +6,27 @@ use actix_web::Responder;
 use actix_web_flash_messages::FlashMessage;
 use askama_actix::TemplateToResponse;
 
+use crate::dtos::IntoTemplate;
 use crate::dtos::IsValidStatus;
 use crate::dtos::NewTask;
 use crate::errors::AppResponseError;
+use crate::models::UserModel;
 use crate::states::AppState;
 use crate::states::DbRepository;
 use crate::templates::NewTaskTemplate;
 
 pub async fn new_task_form_handler<Repo>(
     app_data: web::Data<AppState<Repo>>,
+    identity: Option<Identity>,
 ) -> Result<impl Responder, AppResponseError>
 where
     Repo: DbRepository,
 {
     let statuses = app_data.repo.get_all_statuses().await?;
+    let user = UserModel::try_from_identity(identity, &app_data.repo).await?;
     Ok(NewTaskTemplate {
         statuses,
+        login_user: user,
         ..Default::default()
     })
 }

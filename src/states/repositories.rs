@@ -1,13 +1,15 @@
 use async_trait::async_trait;
 
 use crate::dtos::NewTask;
+use crate::dtos::NewUser;
 use crate::dtos::TaskFilter;
 use crate::dtos::UpdateTask;
 use crate::errors::AppResult;
 use crate::models::StatusModel;
 use crate::models::TaskModel;
+use crate::models::UserModel;
 
-pub trait DbRepository: TasksRepository + StatusRepository {}
+pub trait DbRepository: TasksRepository + StatusRepository + UsersRepository {}
 
 #[async_trait]
 pub trait TasksRepository {
@@ -34,4 +36,16 @@ pub trait StatusRepository {
 
     /// get status by id
     async fn get_status_by_id(&self, status_id: i64) -> AppResult<Option<StatusModel>>;
+}
+
+#[async_trait]
+pub trait UsersRepository {
+    /// create new user
+    async fn create_user(&self, new_user: &NewUser) -> AppResult<UserModel>;
+
+    /// authentication
+    async fn auth_user(&self, email: &str, password: &str) -> AppResult<Option<UserModel>>;
+
+    /// get user by id
+    async fn get_user_by_id(&self, id: i64) -> AppResult<Option<UserModel>>;
 }

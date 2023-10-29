@@ -13,9 +13,7 @@ use todoapp::assets::assets_service;
 use todoapp::errors::AppError;
 use todoapp::errors::AppResult;
 use todoapp::middlewares;
-use todoapp::routes::not_found_service;
-use todoapp::routes::root;
-use todoapp::routes::tasks;
+use todoapp::routes::*;
 use todoapp::states::create_app_state;
 
 #[actix_web::main]
@@ -42,9 +40,12 @@ async fn main() -> AppResult<()> {
             .app_data(app_data.clone())
             .wrap(middleware::Logger::default())
             .wrap(middleware::NormalizePath::trim())
+            .wrap(middlewares::build_identity())
             .wrap(middlewares::build_flash(cookie_key.clone()))
+            .wrap(middlewares::build_session(cookie_key.clone()))
             .service(assets_service())
-            .configure(root)
+            .configure(root(create_app_state))
+            .configure(auth(create_app_state))
             .configure(tasks(create_app_state))
             .default_service(not_found_service())
     })
