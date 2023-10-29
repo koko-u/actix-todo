@@ -1,7 +1,10 @@
 use actix_identity::Identity;
+use actix_web::http;
 use actix_web::web;
+use actix_web::HttpResponse;
 use actix_web::Responder;
 use actix_web_flash_messages::IncomingFlashMessages;
+use askama_actix::TemplateToResponse;
 
 use crate::dtos::TaskFilter;
 use crate::errors::AppResponseError;
@@ -21,6 +24,14 @@ where
     Repo: DbRepository,
 {
     let user = UserModel::try_from_identity(identity, &app_data.repo).await?;
+    if user.is_none() {
+        // task list need to logged in.
+        let res = HttpResponse::SeeOther()
+            .append_header((http::header::LOCATION, "/auth/login"))
+            .finish();
+        return Ok(res.map_into_left_body());
+    }
+
     let task_filter = query.into_inner();
 
     let tasks = app_data.repo.get_filtered_tasks(&task_filter).await?;
@@ -36,7 +47,7 @@ where
         error_flash_messages: flash_messages.filter(FLevel::Error),
     };
 
-    Ok(task_list)
+    Ok(task_list.to_response().map_into_right_body())
 }
 
 trait FilterMessage {
