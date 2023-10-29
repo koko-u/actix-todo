@@ -7,10 +7,12 @@ WITH
     , status_id
     , created_at
     , updated_at
+    , user_id
     FROM
       tasks
     WHERE
-      summary ILIKE CASE
+      user_id = $4
+      AND summary ILIKE CASE
         WHEN $1::varchar IS NULL THEN summary
         ELSE '%' || $1::varchar || '%'
       END
@@ -37,6 +39,9 @@ SELECT
 , T.description
 , T.status_id
 , S.name AS status_name
+, T.user_id
+, U.name AS user_name
+, U.email AS user_email
 , T.created_at
 , T.updated_at
 FROM
@@ -51,5 +56,6 @@ FROM
       target IS NOT NULL
       OR is_empty = TRUE
   ) AS S ON T.status_id = S.id
+  LEFT OUTER JOIN users AS U ON T.user_id = U.id
 ORDER BY
   T.id

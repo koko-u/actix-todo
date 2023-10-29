@@ -25,6 +25,14 @@ where
 {
     let id = path.into_inner();
     let user = UserModel::try_from_identity(identity, &app_data.repo).await?;
+    if user.is_none() {
+        // task list need to logged in.
+        let res = HttpResponse::SeeOther()
+            .append_header((http::header::LOCATION, "/auth/login"))
+            .finish();
+        return Ok(res.map_into_left_body());
+    }
+
     let statuses = app_data.repo.get_all_statuses().await?;
     let Some(task) = app_data.repo.get_task_by_id(id).await? else {
         let redirect = HttpResponse::SeeOther()
@@ -49,6 +57,7 @@ pub async fn update_task_handler<Repo>(
     app_data: web::Data<AppState<Repo>>,
     form: web::Form<UpdateTask>,
     path: web::Path<i64>,
+    identity: Option<Identity>,
 ) -> Result<impl Responder, AppResponseError>
 where
     Repo: DbRepository,
@@ -56,6 +65,14 @@ where
     use validify::Validify;
     let mut update_task = form.into_inner();
     let id = path.into_inner();
+    let user = UserModel::try_from_identity(identity, &app_data.repo).await?;
+    if user.is_none() {
+        // task list need to logged in.
+        let res = HttpResponse::SeeOther()
+            .append_header((http::header::LOCATION, "/auth/login"))
+            .finish();
+        return Ok(res.map_into_left_body());
+    }
 
     let statuses = app_data.repo.get_all_statuses().await?;
 

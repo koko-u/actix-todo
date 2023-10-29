@@ -1,9 +1,9 @@
 use actix_identity::Identity;
 use actix_web::http;
 use actix_web::web;
-use actix_web::Either;
 use actix_web::HttpResponse;
 use actix_web::Responder;
+use askama_actix::TemplateToResponse;
 
 use crate::errors::AppResponseError;
 use crate::models::UserModel;
@@ -21,17 +21,28 @@ where
 {
     let id = path.into_inner();
     let user = UserModel::try_from_identity(identity, &app_data.repo).await?;
+    if user.is_none() {
+        // task list need to logged in.
+        let res = HttpResponse::SeeOther()
+            .append_header((http::header::LOCATION, "/auth/login"))
+            .finish();
+        return Ok(res.map_into_left_body());
+    }
+
     let task = app_data.repo.get_task_by_id(id).await?;
-    let response = match task {
-        Some(task) => Either::Right(TaskDetail {
-            login_user: user,
-            task: task.into(),
-        }),
-        None => Either::Left(
-            HttpResponse::SeeOther()
+    match task {
+        Some(task) => {
+            let task_detail = TaskDetail {
+                login_user: user,
+                task: task.into(),
+            };
+            Ok(task_detail.to_response().map_into_right_body())
+        }
+        None => {
+            let res = HttpResponse::SeeOther()
                 .append_header((http::header::LOCATION, "/tasks"))
-                .body(format!("Task with id: {id} not found")),
-        ),
-    };
-    Ok(response)
+                .body(format!("Task with id: {id} not found"));
+            Ok(res.map_into_left_body())
+        }
+    }
 }

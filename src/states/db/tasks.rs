@@ -14,13 +14,18 @@ use super::DbState;
 
 #[async_trait]
 impl TasksRepository for DbState {
-    async fn get_filtered_tasks(&self, filter: &TaskFilter) -> AppResult<Vec<TaskModel>> {
+    async fn get_filtered_tasks(
+        &self,
+        user_id: i64,
+        filter: &TaskFilter,
+    ) -> AppResult<Vec<TaskModel>> {
         let tasks = sqlx::query_file_as!(
             TaskModel,
             "sql/get_filtered_tasks.sql",
             filter.summary,
             &filter.status_ids,
-            filter.status_ids.is_empty()
+            filter.status_ids.is_empty(),
+            user_id,
         )
         .fetch_all(&self.0)
         .await
@@ -36,7 +41,7 @@ impl TasksRepository for DbState {
 
         Ok(task)
     }
-    async fn create_task(&self, new_task: &NewTask) -> AppResult<TaskModel> {
+    async fn create_task(&self, user_id: i64, new_task: &NewTask) -> AppResult<TaskModel> {
         let summary = new_task.summary.as_str().empty_as_none();
         let description = new_task.description.as_str().empty_as_none();
         let status_id = new_task.status_id;
@@ -50,7 +55,8 @@ impl TasksRepository for DbState {
                 "sql/insert_task.sql",
                 summary,
                 description,
-                status_id
+                status_id,
+                user_id,
             )
             .fetch_one(tx.as_mut())
             .await

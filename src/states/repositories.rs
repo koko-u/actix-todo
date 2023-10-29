@@ -14,13 +14,13 @@ pub trait DbRepository: TasksRepository + StatusRepository + UsersRepository {}
 #[async_trait]
 pub trait TasksRepository {
     /// get task using filter conditions
-    async fn get_filtered_tasks(&self, filter: &TaskFilter) -> AppResult<Vec<TaskModel>>;
+    async fn get_filtered_tasks(&self, user_id: i64, filter: &TaskFilter) -> AppResult<Vec<TaskModel>>;
 
     /// get task by id
     async fn get_task_by_id(&self, id: i64) -> AppResult<Option<TaskModel>>;
 
     /// create new task
-    async fn create_task(&self, new_task: &NewTask) -> AppResult<TaskModel>;
+    async fn create_task(&self, user_id: i64, new_task: &NewTask) -> AppResult<TaskModel>;
 
     /// update the task with id
     async fn update_task(&self, id: i64, update_task: &UpdateTask) -> AppResult<Option<TaskModel>>;

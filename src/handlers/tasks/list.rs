@@ -32,9 +32,10 @@ where
         return Ok(res.map_into_left_body());
     }
 
+    let user_id = user.as_ref().map(|user| user.id).unwrap_or_default();
     let task_filter = query.into_inner();
 
-    let tasks = app_data.repo.get_filtered_tasks(&task_filter).await?;
+    let tasks = app_data.repo.get_filtered_tasks(user_id, &task_filter).await?;
     let statuses = app_data.repo.get_all_statuses().await?;
 
     use actix_web_flash_messages::Level as FLevel;
